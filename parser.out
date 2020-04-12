@@ -1,66 +1,81 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    COMMAND
-    FN
-    HANDLER
-
 Grammar
 
 Rule 0     S' -> program
 Rule 1     program -> exp
-Rule 2     exp -> term binop exp
-Rule 3     exp -> term
-Rule 4     exp -> IF exp { exp } ELSE { exp }
-Rule 5     exp -> TRY { exp } CATCH { exp }
-Rule 6     variable -> ID = exp ;
-Rule 7     term -> unop term
-Rule 8     term -> number
-Rule 9     term -> BOOLEAN
-Rule 10    term -> STRING
-Rule 11    term -> empty
-Rule 12    unop -> SIGN
-Rule 13    unop -> UNITARY_OPERATOR
-Rule 14    binop -> SIGN
-Rule 15    binop -> BINARY_OPERATOR
-Rule 16    number -> FLOAT
-Rule 17    number -> INTEGER
-Rule 18    empty -> <empty>
+Rule 2     program -> function
+Rule 3     function -> FN ID ( parameter ) { body }
+Rule 4     function -> COMMAND ID ( parameter ) { body }
+Rule 5     function -> HANDLER ID ( parameter ) { body }
+Rule 6     parameter -> parameter , ID
+Rule 7     parameter -> ID
+Rule 8     body -> body exp
+Rule 9     body -> body variable
+Rule 10    body -> exp
+Rule 11    body -> variable
+Rule 12    exp -> term binop exp
+Rule 13    exp -> term
+Rule 14    exp -> IF exp { body } ELSE { body }
+Rule 15    exp -> TRY { body } CATCH { body }
+Rule 16    variable -> ID = exp ;
+Rule 17    term -> unop term
+Rule 18    term -> number
+Rule 19    term -> boolean
+Rule 20    term -> string
+Rule 21    term -> ID
+Rule 22    term -> empty
+Rule 23    unop -> SIGN
+Rule 24    unop -> UNITARY_OPERATOR
+Rule 25    binop -> SIGN
+Rule 26    binop -> BINARY_OPERATOR
+Rule 27    number -> FLOAT
+Rule 28    number -> INTEGER
+Rule 29    boolean -> BOOLEAN
+Rule 30    string -> STRING
+Rule 31    empty -> <empty>
 
 Terminals, with rules where they appear
 
-;                    : 6
-=                    : 6
-BINARY_OPERATOR      : 15
-BOOLEAN              : 9
-CATCH                : 5
-COMMAND              : 
-ELSE                 : 4
-FLOAT                : 16
-FN                   : 
-HANDLER              : 
-ID                   : 6
-IF                   : 4
-INTEGER              : 17
-SIGN                 : 12 14
-STRING               : 10
-TRY                  : 5
-UNITARY_OPERATOR     : 13
+(                    : 3 4 5
+)                    : 3 4 5
+,                    : 6
+;                    : 16
+=                    : 16
+BINARY_OPERATOR      : 26
+BOOLEAN              : 29
+CATCH                : 15
+COMMAND              : 4
+ELSE                 : 14
+FLOAT                : 27
+FN                   : 3
+HANDLER              : 5
+ID                   : 3 4 5 6 7 16 21
+IF                   : 14
+INTEGER              : 28
+SIGN                 : 23 25
+STRING               : 30
+TRY                  : 15
+UNITARY_OPERATOR     : 24
 error                : 
-{                    : 4 4 5 5
-}                    : 4 4 5 5
+{                    : 3 4 5 14 14 15 15
+}                    : 3 4 5 14 14 15 15
 
 Nonterminals, with rules where they appear
 
-binop                : 2
-empty                : 11
-exp                  : 1 2 4 4 4 5 5 6
-number               : 8
+binop                : 12
+body                 : 3 4 5 8 9 14 14 15 15
+boolean              : 19
+empty                : 22
+exp                  : 1 8 10 12 14 16
+function             : 2
+number               : 18
+parameter            : 3 4 5 6
 program              : 0
-term                 : 2 3 7
-unop                 : 7
-variable             : 
+string               : 20
+term                 : 12 13 17
+unop                 : 17
+variable             : 9 11
 
 Parsing method: LALR
 
@@ -68,41 +83,55 @@ state 0
 
     (0) S' -> . program
     (1) program -> . exp
-    (2) exp -> . term binop exp
-    (3) exp -> . term
-    (4) exp -> . IF exp { exp } ELSE { exp }
-    (5) exp -> . TRY { exp } CATCH { exp }
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (2) program -> . function
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (3) function -> . FN ID ( parameter ) { body }
+    (4) function -> . COMMAND ID ( parameter ) { body }
+    (5) function -> . HANDLER ID ( parameter ) { body }
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
 
   ! shift/reduce conflict for SIGN resolved as shift
-    IF              shift and go to state 4
-    TRY             shift and go to state 5
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    $end            reduce using rule 18 (empty -> .)
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    FN              shift and go to state 7
+    COMMAND         shift and go to state 9
+    HANDLER         shift and go to state 10
+    ID              shift and go to state 8
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    $end            reduce using rule 31 (empty -> .)
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
 
     program                        shift and go to state 1
     exp                            shift and go to state 2
-    term                           shift and go to state 3
-    unop                           shift and go to state 6
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
+    function                       shift and go to state 3
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
 
 state 1
 
@@ -119,531 +148,1986 @@ state 2
 
 state 3
 
-    (2) exp -> term . binop exp
-    (3) exp -> term .
-    (14) binop -> . SIGN
-    (15) binop -> . BINARY_OPERATOR
+    (2) program -> function .
 
-    $end            reduce using rule 3 (exp -> term .)
-    {               reduce using rule 3 (exp -> term .)
-    }               reduce using rule 3 (exp -> term .)
-    SIGN            shift and go to state 16
-    BINARY_OPERATOR shift and go to state 17
+    $end            reduce using rule 2 (program -> function .)
 
-    binop                          shift and go to state 15
 
 state 4
 
-    (4) exp -> IF . exp { exp } ELSE { exp }
-    (2) exp -> . term binop exp
-    (3) exp -> . term
-    (4) exp -> . IF exp { exp } ELSE { exp }
-    (5) exp -> . TRY { exp } CATCH { exp }
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (12) exp -> term . binop exp
+    (13) exp -> term .
+    (25) binop -> . SIGN
+    (26) binop -> . BINARY_OPERATOR
 
   ! shift/reduce conflict for SIGN resolved as shift
-    IF              shift and go to state 4
-    TRY             shift and go to state 5
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    {               reduce using rule 18 (empty -> .)
+  ! shift/reduce conflict for BINARY_OPERATOR resolved as shift
+    $end            reduce using rule 13 (exp -> term .)
+    {               reduce using rule 13 (exp -> term .)
+    }               reduce using rule 13 (exp -> term .)
+    IF              reduce using rule 13 (exp -> term .)
+    TRY             reduce using rule 13 (exp -> term .)
+    ID              reduce using rule 13 (exp -> term .)
+    UNITARY_OPERATOR reduce using rule 13 (exp -> term .)
+    FLOAT           reduce using rule 13 (exp -> term .)
+    INTEGER         reduce using rule 13 (exp -> term .)
+    BOOLEAN         reduce using rule 13 (exp -> term .)
+    STRING          reduce using rule 13 (exp -> term .)
+    ;               reduce using rule 13 (exp -> term .)
+    SIGN            shift and go to state 23
+    BINARY_OPERATOR shift and go to state 24
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
+  ! SIGN            [ reduce using rule 13 (exp -> term .) ]
+  ! BINARY_OPERATOR [ reduce using rule 13 (exp -> term .) ]
 
-    exp                            shift and go to state 18
-    term                           shift and go to state 3
-    unop                           shift and go to state 6
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
+    binop                          shift and go to state 22
 
 state 5
 
-    (5) exp -> TRY . { exp } CATCH { exp }
+    (14) exp -> IF . exp { body } ELSE { body }
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
 
-    {               shift and go to state 19
+  ! shift/reduce conflict for SIGN resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 8
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    {               reduce using rule 31 (empty -> .)
 
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 25
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
 
 state 6
 
-    (7) term -> unop . term
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (15) exp -> TRY . { body } CATCH { body }
 
-  ! shift/reduce conflict for SIGN resolved as shift
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    $end            reduce using rule 18 (empty -> .)
-    {               reduce using rule 18 (empty -> .)
-    }               reduce using rule 18 (empty -> .)
+    {               shift and go to state 26
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
-
-    unop                           shift and go to state 6
-    term                           shift and go to state 20
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
 
 state 7
 
-    (8) term -> number .
+    (3) function -> FN . ID ( parameter ) { body }
 
-    SIGN            reduce using rule 8 (term -> number .)
-    BINARY_OPERATOR reduce using rule 8 (term -> number .)
-    $end            reduce using rule 8 (term -> number .)
-    {               reduce using rule 8 (term -> number .)
-    }               reduce using rule 8 (term -> number .)
+    ID              shift and go to state 27
 
 
 state 8
 
-    (9) term -> BOOLEAN .
+    (21) term -> ID .
 
-    SIGN            reduce using rule 9 (term -> BOOLEAN .)
-    BINARY_OPERATOR reduce using rule 9 (term -> BOOLEAN .)
-    $end            reduce using rule 9 (term -> BOOLEAN .)
-    {               reduce using rule 9 (term -> BOOLEAN .)
-    }               reduce using rule 9 (term -> BOOLEAN .)
+    SIGN            reduce using rule 21 (term -> ID .)
+    BINARY_OPERATOR reduce using rule 21 (term -> ID .)
+    $end            reduce using rule 21 (term -> ID .)
+    {               reduce using rule 21 (term -> ID .)
+    }               reduce using rule 21 (term -> ID .)
+    IF              reduce using rule 21 (term -> ID .)
+    TRY             reduce using rule 21 (term -> ID .)
+    ID              reduce using rule 21 (term -> ID .)
+    UNITARY_OPERATOR reduce using rule 21 (term -> ID .)
+    FLOAT           reduce using rule 21 (term -> ID .)
+    INTEGER         reduce using rule 21 (term -> ID .)
+    BOOLEAN         reduce using rule 21 (term -> ID .)
+    STRING          reduce using rule 21 (term -> ID .)
+    ;               reduce using rule 21 (term -> ID .)
 
 
 state 9
 
-    (10) term -> STRING .
+    (4) function -> COMMAND . ID ( parameter ) { body }
 
-    SIGN            reduce using rule 10 (term -> STRING .)
-    BINARY_OPERATOR reduce using rule 10 (term -> STRING .)
-    $end            reduce using rule 10 (term -> STRING .)
-    {               reduce using rule 10 (term -> STRING .)
-    }               reduce using rule 10 (term -> STRING .)
+    ID              shift and go to state 28
 
 
 state 10
 
-    (11) term -> empty .
+    (5) function -> HANDLER . ID ( parameter ) { body }
 
-    SIGN            reduce using rule 11 (term -> empty .)
-    BINARY_OPERATOR reduce using rule 11 (term -> empty .)
-    $end            reduce using rule 11 (term -> empty .)
-    {               reduce using rule 11 (term -> empty .)
-    }               reduce using rule 11 (term -> empty .)
+    ID              shift and go to state 29
 
 
 state 11
 
-    (12) unop -> SIGN .
+    (17) term -> unop . term
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
 
-    BOOLEAN         reduce using rule 12 (unop -> SIGN .)
-    STRING          reduce using rule 12 (unop -> SIGN .)
-    SIGN            reduce using rule 12 (unop -> SIGN .)
-    UNITARY_OPERATOR reduce using rule 12 (unop -> SIGN .)
-    FLOAT           reduce using rule 12 (unop -> SIGN .)
-    INTEGER         reduce using rule 12 (unop -> SIGN .)
-    BINARY_OPERATOR reduce using rule 12 (unop -> SIGN .)
-    $end            reduce using rule 12 (unop -> SIGN .)
-    {               reduce using rule 12 (unop -> SIGN .)
-    }               reduce using rule 12 (unop -> SIGN .)
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    ID              shift and go to state 8
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    $end            reduce using rule 31 (empty -> .)
+    {               reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
+    IF              reduce using rule 31 (empty -> .)
+    TRY             reduce using rule 31 (empty -> .)
+    ;               reduce using rule 31 (empty -> .)
 
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    unop                           shift and go to state 11
+    term                           shift and go to state 30
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
 
 state 12
 
-    (13) unop -> UNITARY_OPERATOR .
+    (18) term -> number .
 
-    BOOLEAN         reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    STRING          reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    SIGN            reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    UNITARY_OPERATOR reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    FLOAT           reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    INTEGER         reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    BINARY_OPERATOR reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    $end            reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    {               reduce using rule 13 (unop -> UNITARY_OPERATOR .)
-    }               reduce using rule 13 (unop -> UNITARY_OPERATOR .)
+    SIGN            reduce using rule 18 (term -> number .)
+    BINARY_OPERATOR reduce using rule 18 (term -> number .)
+    $end            reduce using rule 18 (term -> number .)
+    {               reduce using rule 18 (term -> number .)
+    }               reduce using rule 18 (term -> number .)
+    IF              reduce using rule 18 (term -> number .)
+    TRY             reduce using rule 18 (term -> number .)
+    ID              reduce using rule 18 (term -> number .)
+    UNITARY_OPERATOR reduce using rule 18 (term -> number .)
+    FLOAT           reduce using rule 18 (term -> number .)
+    INTEGER         reduce using rule 18 (term -> number .)
+    BOOLEAN         reduce using rule 18 (term -> number .)
+    STRING          reduce using rule 18 (term -> number .)
+    ;               reduce using rule 18 (term -> number .)
 
 
 state 13
 
-    (16) number -> FLOAT .
+    (19) term -> boolean .
 
-    SIGN            reduce using rule 16 (number -> FLOAT .)
-    BINARY_OPERATOR reduce using rule 16 (number -> FLOAT .)
-    $end            reduce using rule 16 (number -> FLOAT .)
-    {               reduce using rule 16 (number -> FLOAT .)
-    }               reduce using rule 16 (number -> FLOAT .)
+    SIGN            reduce using rule 19 (term -> boolean .)
+    BINARY_OPERATOR reduce using rule 19 (term -> boolean .)
+    $end            reduce using rule 19 (term -> boolean .)
+    {               reduce using rule 19 (term -> boolean .)
+    }               reduce using rule 19 (term -> boolean .)
+    IF              reduce using rule 19 (term -> boolean .)
+    TRY             reduce using rule 19 (term -> boolean .)
+    ID              reduce using rule 19 (term -> boolean .)
+    UNITARY_OPERATOR reduce using rule 19 (term -> boolean .)
+    FLOAT           reduce using rule 19 (term -> boolean .)
+    INTEGER         reduce using rule 19 (term -> boolean .)
+    BOOLEAN         reduce using rule 19 (term -> boolean .)
+    STRING          reduce using rule 19 (term -> boolean .)
+    ;               reduce using rule 19 (term -> boolean .)
 
 
 state 14
 
-    (17) number -> INTEGER .
+    (20) term -> string .
 
-    SIGN            reduce using rule 17 (number -> INTEGER .)
-    BINARY_OPERATOR reduce using rule 17 (number -> INTEGER .)
-    $end            reduce using rule 17 (number -> INTEGER .)
-    {               reduce using rule 17 (number -> INTEGER .)
-    }               reduce using rule 17 (number -> INTEGER .)
+    SIGN            reduce using rule 20 (term -> string .)
+    BINARY_OPERATOR reduce using rule 20 (term -> string .)
+    $end            reduce using rule 20 (term -> string .)
+    {               reduce using rule 20 (term -> string .)
+    }               reduce using rule 20 (term -> string .)
+    IF              reduce using rule 20 (term -> string .)
+    TRY             reduce using rule 20 (term -> string .)
+    ID              reduce using rule 20 (term -> string .)
+    UNITARY_OPERATOR reduce using rule 20 (term -> string .)
+    FLOAT           reduce using rule 20 (term -> string .)
+    INTEGER         reduce using rule 20 (term -> string .)
+    BOOLEAN         reduce using rule 20 (term -> string .)
+    STRING          reduce using rule 20 (term -> string .)
+    ;               reduce using rule 20 (term -> string .)
 
 
 state 15
 
-    (2) exp -> term binop . exp
-    (2) exp -> . term binop exp
-    (3) exp -> . term
-    (4) exp -> . IF exp { exp } ELSE { exp }
-    (5) exp -> . TRY { exp } CATCH { exp }
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (22) term -> empty .
 
-  ! shift/reduce conflict for SIGN resolved as shift
-    IF              shift and go to state 4
-    TRY             shift and go to state 5
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    $end            reduce using rule 18 (empty -> .)
-    {               reduce using rule 18 (empty -> .)
-    }               reduce using rule 18 (empty -> .)
+    SIGN            reduce using rule 22 (term -> empty .)
+    BINARY_OPERATOR reduce using rule 22 (term -> empty .)
+    $end            reduce using rule 22 (term -> empty .)
+    {               reduce using rule 22 (term -> empty .)
+    }               reduce using rule 22 (term -> empty .)
+    IF              reduce using rule 22 (term -> empty .)
+    TRY             reduce using rule 22 (term -> empty .)
+    ID              reduce using rule 22 (term -> empty .)
+    UNITARY_OPERATOR reduce using rule 22 (term -> empty .)
+    FLOAT           reduce using rule 22 (term -> empty .)
+    INTEGER         reduce using rule 22 (term -> empty .)
+    BOOLEAN         reduce using rule 22 (term -> empty .)
+    STRING          reduce using rule 22 (term -> empty .)
+    ;               reduce using rule 22 (term -> empty .)
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
-
-    term                           shift and go to state 3
-    exp                            shift and go to state 21
-    unop                           shift and go to state 6
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
 
 state 16
 
-    (14) binop -> SIGN .
+    (23) unop -> SIGN .
 
-    IF              reduce using rule 14 (binop -> SIGN .)
-    TRY             reduce using rule 14 (binop -> SIGN .)
-    BOOLEAN         reduce using rule 14 (binop -> SIGN .)
-    STRING          reduce using rule 14 (binop -> SIGN .)
-    SIGN            reduce using rule 14 (binop -> SIGN .)
-    UNITARY_OPERATOR reduce using rule 14 (binop -> SIGN .)
-    FLOAT           reduce using rule 14 (binop -> SIGN .)
-    INTEGER         reduce using rule 14 (binop -> SIGN .)
-    BINARY_OPERATOR reduce using rule 14 (binop -> SIGN .)
-    $end            reduce using rule 14 (binop -> SIGN .)
-    {               reduce using rule 14 (binop -> SIGN .)
-    }               reduce using rule 14 (binop -> SIGN .)
+    ID              reduce using rule 23 (unop -> SIGN .)
+    SIGN            reduce using rule 23 (unop -> SIGN .)
+    UNITARY_OPERATOR reduce using rule 23 (unop -> SIGN .)
+    FLOAT           reduce using rule 23 (unop -> SIGN .)
+    INTEGER         reduce using rule 23 (unop -> SIGN .)
+    BOOLEAN         reduce using rule 23 (unop -> SIGN .)
+    STRING          reduce using rule 23 (unop -> SIGN .)
+    BINARY_OPERATOR reduce using rule 23 (unop -> SIGN .)
+    $end            reduce using rule 23 (unop -> SIGN .)
+    {               reduce using rule 23 (unop -> SIGN .)
+    }               reduce using rule 23 (unop -> SIGN .)
+    IF              reduce using rule 23 (unop -> SIGN .)
+    TRY             reduce using rule 23 (unop -> SIGN .)
+    ;               reduce using rule 23 (unop -> SIGN .)
 
 
 state 17
 
-    (15) binop -> BINARY_OPERATOR .
+    (24) unop -> UNITARY_OPERATOR .
 
-    IF              reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    TRY             reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    BOOLEAN         reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    STRING          reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    SIGN            reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    UNITARY_OPERATOR reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    FLOAT           reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    INTEGER         reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    BINARY_OPERATOR reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    $end            reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    {               reduce using rule 15 (binop -> BINARY_OPERATOR .)
-    }               reduce using rule 15 (binop -> BINARY_OPERATOR .)
+    ID              reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    SIGN            reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    UNITARY_OPERATOR reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    FLOAT           reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    INTEGER         reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    BOOLEAN         reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    STRING          reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    BINARY_OPERATOR reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    $end            reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    {               reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    }               reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    IF              reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    TRY             reduce using rule 24 (unop -> UNITARY_OPERATOR .)
+    ;               reduce using rule 24 (unop -> UNITARY_OPERATOR .)
 
 
 state 18
 
-    (4) exp -> IF exp . { exp } ELSE { exp }
+    (27) number -> FLOAT .
 
-    {               shift and go to state 22
+    SIGN            reduce using rule 27 (number -> FLOAT .)
+    BINARY_OPERATOR reduce using rule 27 (number -> FLOAT .)
+    $end            reduce using rule 27 (number -> FLOAT .)
+    {               reduce using rule 27 (number -> FLOAT .)
+    }               reduce using rule 27 (number -> FLOAT .)
+    IF              reduce using rule 27 (number -> FLOAT .)
+    TRY             reduce using rule 27 (number -> FLOAT .)
+    ID              reduce using rule 27 (number -> FLOAT .)
+    UNITARY_OPERATOR reduce using rule 27 (number -> FLOAT .)
+    FLOAT           reduce using rule 27 (number -> FLOAT .)
+    INTEGER         reduce using rule 27 (number -> FLOAT .)
+    BOOLEAN         reduce using rule 27 (number -> FLOAT .)
+    STRING          reduce using rule 27 (number -> FLOAT .)
+    ;               reduce using rule 27 (number -> FLOAT .)
 
 
 state 19
 
-    (5) exp -> TRY { . exp } CATCH { exp }
-    (2) exp -> . term binop exp
-    (3) exp -> . term
-    (4) exp -> . IF exp { exp } ELSE { exp }
-    (5) exp -> . TRY { exp } CATCH { exp }
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (28) number -> INTEGER .
 
-  ! shift/reduce conflict for SIGN resolved as shift
-    IF              shift and go to state 4
-    TRY             shift and go to state 5
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    }               reduce using rule 18 (empty -> .)
+    SIGN            reduce using rule 28 (number -> INTEGER .)
+    BINARY_OPERATOR reduce using rule 28 (number -> INTEGER .)
+    $end            reduce using rule 28 (number -> INTEGER .)
+    {               reduce using rule 28 (number -> INTEGER .)
+    }               reduce using rule 28 (number -> INTEGER .)
+    IF              reduce using rule 28 (number -> INTEGER .)
+    TRY             reduce using rule 28 (number -> INTEGER .)
+    ID              reduce using rule 28 (number -> INTEGER .)
+    UNITARY_OPERATOR reduce using rule 28 (number -> INTEGER .)
+    FLOAT           reduce using rule 28 (number -> INTEGER .)
+    INTEGER         reduce using rule 28 (number -> INTEGER .)
+    BOOLEAN         reduce using rule 28 (number -> INTEGER .)
+    STRING          reduce using rule 28 (number -> INTEGER .)
+    ;               reduce using rule 28 (number -> INTEGER .)
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
-
-    exp                            shift and go to state 23
-    term                           shift and go to state 3
-    unop                           shift and go to state 6
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
 
 state 20
 
-    (7) term -> unop term .
+    (29) boolean -> BOOLEAN .
 
-    SIGN            reduce using rule 7 (term -> unop term .)
-    BINARY_OPERATOR reduce using rule 7 (term -> unop term .)
-    $end            reduce using rule 7 (term -> unop term .)
-    {               reduce using rule 7 (term -> unop term .)
-    }               reduce using rule 7 (term -> unop term .)
+    SIGN            reduce using rule 29 (boolean -> BOOLEAN .)
+    BINARY_OPERATOR reduce using rule 29 (boolean -> BOOLEAN .)
+    $end            reduce using rule 29 (boolean -> BOOLEAN .)
+    {               reduce using rule 29 (boolean -> BOOLEAN .)
+    }               reduce using rule 29 (boolean -> BOOLEAN .)
+    IF              reduce using rule 29 (boolean -> BOOLEAN .)
+    TRY             reduce using rule 29 (boolean -> BOOLEAN .)
+    ID              reduce using rule 29 (boolean -> BOOLEAN .)
+    UNITARY_OPERATOR reduce using rule 29 (boolean -> BOOLEAN .)
+    FLOAT           reduce using rule 29 (boolean -> BOOLEAN .)
+    INTEGER         reduce using rule 29 (boolean -> BOOLEAN .)
+    BOOLEAN         reduce using rule 29 (boolean -> BOOLEAN .)
+    STRING          reduce using rule 29 (boolean -> BOOLEAN .)
+    ;               reduce using rule 29 (boolean -> BOOLEAN .)
 
 
 state 21
 
-    (2) exp -> term binop exp .
+    (30) string -> STRING .
 
-    $end            reduce using rule 2 (exp -> term binop exp .)
-    {               reduce using rule 2 (exp -> term binop exp .)
-    }               reduce using rule 2 (exp -> term binop exp .)
+    SIGN            reduce using rule 30 (string -> STRING .)
+    BINARY_OPERATOR reduce using rule 30 (string -> STRING .)
+    $end            reduce using rule 30 (string -> STRING .)
+    {               reduce using rule 30 (string -> STRING .)
+    }               reduce using rule 30 (string -> STRING .)
+    IF              reduce using rule 30 (string -> STRING .)
+    TRY             reduce using rule 30 (string -> STRING .)
+    ID              reduce using rule 30 (string -> STRING .)
+    UNITARY_OPERATOR reduce using rule 30 (string -> STRING .)
+    FLOAT           reduce using rule 30 (string -> STRING .)
+    INTEGER         reduce using rule 30 (string -> STRING .)
+    BOOLEAN         reduce using rule 30 (string -> STRING .)
+    STRING          reduce using rule 30 (string -> STRING .)
+    ;               reduce using rule 30 (string -> STRING .)
 
 
 state 22
 
-    (4) exp -> IF exp { . exp } ELSE { exp }
-    (2) exp -> . term binop exp
-    (3) exp -> . term
-    (4) exp -> . IF exp { exp } ELSE { exp }
-    (5) exp -> . TRY { exp } CATCH { exp }
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (12) exp -> term binop . exp
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
 
   ! shift/reduce conflict for SIGN resolved as shift
-    IF              shift and go to state 4
-    TRY             shift and go to state 5
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    }               reduce using rule 18 (empty -> .)
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 8
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    $end            reduce using rule 31 (empty -> .)
+    {               reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
+    ;               reduce using rule 31 (empty -> .)
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
 
-    exp                            shift and go to state 24
-    term                           shift and go to state 3
-    unop                           shift and go to state 6
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
+    term                           shift and go to state 4
+    exp                            shift and go to state 31
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
 
 state 23
 
-    (5) exp -> TRY { exp . } CATCH { exp }
+    (25) binop -> SIGN .
 
-    }               shift and go to state 25
+    IF              reduce using rule 25 (binop -> SIGN .)
+    TRY             reduce using rule 25 (binop -> SIGN .)
+    ID              reduce using rule 25 (binop -> SIGN .)
+    SIGN            reduce using rule 25 (binop -> SIGN .)
+    UNITARY_OPERATOR reduce using rule 25 (binop -> SIGN .)
+    FLOAT           reduce using rule 25 (binop -> SIGN .)
+    INTEGER         reduce using rule 25 (binop -> SIGN .)
+    BOOLEAN         reduce using rule 25 (binop -> SIGN .)
+    STRING          reduce using rule 25 (binop -> SIGN .)
+    BINARY_OPERATOR reduce using rule 25 (binop -> SIGN .)
+    $end            reduce using rule 25 (binop -> SIGN .)
+    {               reduce using rule 25 (binop -> SIGN .)
+    }               reduce using rule 25 (binop -> SIGN .)
+    ;               reduce using rule 25 (binop -> SIGN .)
 
 
 state 24
 
-    (4) exp -> IF exp { exp . } ELSE { exp }
+    (26) binop -> BINARY_OPERATOR .
 
-    }               shift and go to state 26
+    IF              reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    TRY             reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    ID              reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    SIGN            reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    UNITARY_OPERATOR reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    FLOAT           reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    INTEGER         reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    BOOLEAN         reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    STRING          reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    BINARY_OPERATOR reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    $end            reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    {               reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    }               reduce using rule 26 (binop -> BINARY_OPERATOR .)
+    ;               reduce using rule 26 (binop -> BINARY_OPERATOR .)
 
 
 state 25
 
-    (5) exp -> TRY { exp } . CATCH { exp }
+    (14) exp -> IF exp . { body } ELSE { body }
 
-    CATCH           shift and go to state 27
+    {               shift and go to state 32
 
 
 state 26
 
-    (4) exp -> IF exp { exp } . ELSE { exp }
+    (15) exp -> TRY { . body } CATCH { body }
+    (8) body -> . body exp
+    (9) body -> . body variable
+    (10) body -> . exp
+    (11) body -> . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
 
-    ELSE            shift and go to state 28
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
 
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    body                           shift and go to state 33
+    exp                            shift and go to state 34
+    variable                       shift and go to state 35
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
 
 state 27
 
-    (5) exp -> TRY { exp } CATCH . { exp }
+    (3) function -> FN ID . ( parameter ) { body }
 
-    {               shift and go to state 29
+    (               shift and go to state 37
 
 
 state 28
 
-    (4) exp -> IF exp { exp } ELSE . { exp }
+    (4) function -> COMMAND ID . ( parameter ) { body }
 
-    {               shift and go to state 30
+    (               shift and go to state 38
 
 
 state 29
 
-    (5) exp -> TRY { exp } CATCH { . exp }
-    (2) exp -> . term binop exp
-    (3) exp -> . term
-    (4) exp -> . IF exp { exp } ELSE { exp }
-    (5) exp -> . TRY { exp } CATCH { exp }
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (5) function -> HANDLER ID . ( parameter ) { body }
 
-  ! shift/reduce conflict for SIGN resolved as shift
-    IF              shift and go to state 4
-    TRY             shift and go to state 5
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    }               reduce using rule 18 (empty -> .)
+    (               shift and go to state 39
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
-
-    exp                            shift and go to state 31
-    term                           shift and go to state 3
-    unop                           shift and go to state 6
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
 
 state 30
 
-    (4) exp -> IF exp { exp } ELSE { . exp }
-    (2) exp -> . term binop exp
-    (3) exp -> . term
-    (4) exp -> . IF exp { exp } ELSE { exp }
-    (5) exp -> . TRY { exp } CATCH { exp }
-    (7) term -> . unop term
-    (8) term -> . number
-    (9) term -> . BOOLEAN
-    (10) term -> . STRING
-    (11) term -> . empty
-    (12) unop -> . SIGN
-    (13) unop -> . UNITARY_OPERATOR
-    (16) number -> . FLOAT
-    (17) number -> . INTEGER
-    (18) empty -> .
+    (17) term -> unop term .
 
-  ! shift/reduce conflict for SIGN resolved as shift
-    IF              shift and go to state 4
-    TRY             shift and go to state 5
-    BOOLEAN         shift and go to state 8
-    STRING          shift and go to state 9
-    SIGN            shift and go to state 11
-    UNITARY_OPERATOR shift and go to state 12
-    FLOAT           shift and go to state 13
-    INTEGER         shift and go to state 14
-    BINARY_OPERATOR reduce using rule 18 (empty -> .)
-    }               reduce using rule 18 (empty -> .)
+    SIGN            reduce using rule 17 (term -> unop term .)
+    BINARY_OPERATOR reduce using rule 17 (term -> unop term .)
+    $end            reduce using rule 17 (term -> unop term .)
+    {               reduce using rule 17 (term -> unop term .)
+    }               reduce using rule 17 (term -> unop term .)
+    IF              reduce using rule 17 (term -> unop term .)
+    TRY             reduce using rule 17 (term -> unop term .)
+    ID              reduce using rule 17 (term -> unop term .)
+    UNITARY_OPERATOR reduce using rule 17 (term -> unop term .)
+    FLOAT           reduce using rule 17 (term -> unop term .)
+    INTEGER         reduce using rule 17 (term -> unop term .)
+    BOOLEAN         reduce using rule 17 (term -> unop term .)
+    STRING          reduce using rule 17 (term -> unop term .)
+    ;               reduce using rule 17 (term -> unop term .)
 
-  ! SIGN            [ reduce using rule 18 (empty -> .) ]
-
-    exp                            shift and go to state 32
-    term                           shift and go to state 3
-    unop                           shift and go to state 6
-    number                         shift and go to state 7
-    empty                          shift and go to state 10
 
 state 31
 
-    (5) exp -> TRY { exp } CATCH { exp . }
+    (12) exp -> term binop exp .
 
-    }               shift and go to state 33
+    $end            reduce using rule 12 (exp -> term binop exp .)
+    {               reduce using rule 12 (exp -> term binop exp .)
+    }               reduce using rule 12 (exp -> term binop exp .)
+    IF              reduce using rule 12 (exp -> term binop exp .)
+    TRY             reduce using rule 12 (exp -> term binop exp .)
+    ID              reduce using rule 12 (exp -> term binop exp .)
+    SIGN            reduce using rule 12 (exp -> term binop exp .)
+    UNITARY_OPERATOR reduce using rule 12 (exp -> term binop exp .)
+    FLOAT           reduce using rule 12 (exp -> term binop exp .)
+    INTEGER         reduce using rule 12 (exp -> term binop exp .)
+    BOOLEAN         reduce using rule 12 (exp -> term binop exp .)
+    STRING          reduce using rule 12 (exp -> term binop exp .)
+    BINARY_OPERATOR reduce using rule 12 (exp -> term binop exp .)
+    ;               reduce using rule 12 (exp -> term binop exp .)
 
 
 state 32
 
-    (4) exp -> IF exp { exp } ELSE { exp . }
+    (14) exp -> IF exp { . body } ELSE { body }
+    (8) body -> . body exp
+    (9) body -> . body variable
+    (10) body -> . exp
+    (11) body -> . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
 
-    }               shift and go to state 34
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
 
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 34
+    body                           shift and go to state 40
+    variable                       shift and go to state 35
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
 
 state 33
 
-    (5) exp -> TRY { exp } CATCH { exp } .
+    (15) exp -> TRY { body . } CATCH { body }
+    (8) body -> body . exp
+    (9) body -> body . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
 
-    $end            reduce using rule 5 (exp -> TRY { exp } CATCH { exp } .)
-    {               reduce using rule 5 (exp -> TRY { exp } CATCH { exp } .)
-    }               reduce using rule 5 (exp -> TRY { exp } CATCH { exp } .)
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for } resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    }               shift and go to state 41
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
 
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! }               [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 42
+    variable                       shift and go to state 43
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
 
 state 34
 
-    (4) exp -> IF exp { exp } ELSE { exp } .
+    (10) body -> exp .
 
-    $end            reduce using rule 4 (exp -> IF exp { exp } ELSE { exp } .)
-    {               reduce using rule 4 (exp -> IF exp { exp } ELSE { exp } .)
-    }               reduce using rule 4 (exp -> IF exp { exp } ELSE { exp } .)
+    }               reduce using rule 10 (body -> exp .)
+    IF              reduce using rule 10 (body -> exp .)
+    TRY             reduce using rule 10 (body -> exp .)
+    ID              reduce using rule 10 (body -> exp .)
+    SIGN            reduce using rule 10 (body -> exp .)
+    UNITARY_OPERATOR reduce using rule 10 (body -> exp .)
+    FLOAT           reduce using rule 10 (body -> exp .)
+    INTEGER         reduce using rule 10 (body -> exp .)
+    BOOLEAN         reduce using rule 10 (body -> exp .)
+    STRING          reduce using rule 10 (body -> exp .)
+    BINARY_OPERATOR reduce using rule 10 (body -> exp .)
+
+
+state 35
+
+    (11) body -> variable .
+
+    }               reduce using rule 11 (body -> variable .)
+    IF              reduce using rule 11 (body -> variable .)
+    TRY             reduce using rule 11 (body -> variable .)
+    ID              reduce using rule 11 (body -> variable .)
+    SIGN            reduce using rule 11 (body -> variable .)
+    UNITARY_OPERATOR reduce using rule 11 (body -> variable .)
+    FLOAT           reduce using rule 11 (body -> variable .)
+    INTEGER         reduce using rule 11 (body -> variable .)
+    BOOLEAN         reduce using rule 11 (body -> variable .)
+    STRING          reduce using rule 11 (body -> variable .)
+    BINARY_OPERATOR reduce using rule 11 (body -> variable .)
+
+
+state 36
+
+    (16) variable -> ID . = exp ;
+    (21) term -> ID .
+
+    =               shift and go to state 44
+    SIGN            reduce using rule 21 (term -> ID .)
+    BINARY_OPERATOR reduce using rule 21 (term -> ID .)
+    }               reduce using rule 21 (term -> ID .)
+    IF              reduce using rule 21 (term -> ID .)
+    TRY             reduce using rule 21 (term -> ID .)
+    ID              reduce using rule 21 (term -> ID .)
+    UNITARY_OPERATOR reduce using rule 21 (term -> ID .)
+    FLOAT           reduce using rule 21 (term -> ID .)
+    INTEGER         reduce using rule 21 (term -> ID .)
+    BOOLEAN         reduce using rule 21 (term -> ID .)
+    STRING          reduce using rule 21 (term -> ID .)
+
+
+state 37
+
+    (3) function -> FN ID ( . parameter ) { body }
+    (6) parameter -> . parameter , ID
+    (7) parameter -> . ID
+
+    ID              shift and go to state 45
+
+    parameter                      shift and go to state 46
+
+state 38
+
+    (4) function -> COMMAND ID ( . parameter ) { body }
+    (6) parameter -> . parameter , ID
+    (7) parameter -> . ID
+
+    ID              shift and go to state 45
+
+    parameter                      shift and go to state 47
+
+state 39
+
+    (5) function -> HANDLER ID ( . parameter ) { body }
+    (6) parameter -> . parameter , ID
+    (7) parameter -> . ID
+
+    ID              shift and go to state 45
+
+    parameter                      shift and go to state 48
+
+state 40
+
+    (14) exp -> IF exp { body . } ELSE { body }
+    (8) body -> body . exp
+    (9) body -> body . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for } resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    }               shift and go to state 49
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! }               [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 42
+    variable                       shift and go to state 43
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 41
+
+    (15) exp -> TRY { body } . CATCH { body }
+
+    CATCH           shift and go to state 50
+
+
+state 42
+
+    (8) body -> body exp .
+
+    }               reduce using rule 8 (body -> body exp .)
+    IF              reduce using rule 8 (body -> body exp .)
+    TRY             reduce using rule 8 (body -> body exp .)
+    ID              reduce using rule 8 (body -> body exp .)
+    SIGN            reduce using rule 8 (body -> body exp .)
+    UNITARY_OPERATOR reduce using rule 8 (body -> body exp .)
+    FLOAT           reduce using rule 8 (body -> body exp .)
+    INTEGER         reduce using rule 8 (body -> body exp .)
+    BOOLEAN         reduce using rule 8 (body -> body exp .)
+    STRING          reduce using rule 8 (body -> body exp .)
+    BINARY_OPERATOR reduce using rule 8 (body -> body exp .)
+
+
+state 43
+
+    (9) body -> body variable .
+
+    }               reduce using rule 9 (body -> body variable .)
+    IF              reduce using rule 9 (body -> body variable .)
+    TRY             reduce using rule 9 (body -> body variable .)
+    ID              reduce using rule 9 (body -> body variable .)
+    SIGN            reduce using rule 9 (body -> body variable .)
+    UNITARY_OPERATOR reduce using rule 9 (body -> body variable .)
+    FLOAT           reduce using rule 9 (body -> body variable .)
+    INTEGER         reduce using rule 9 (body -> body variable .)
+    BOOLEAN         reduce using rule 9 (body -> body variable .)
+    STRING          reduce using rule 9 (body -> body variable .)
+    BINARY_OPERATOR reduce using rule 9 (body -> body variable .)
+
+
+state 44
+
+    (16) variable -> ID = . exp ;
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 8
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    ;               reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 51
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 45
+
+    (7) parameter -> ID .
+
+    )               reduce using rule 7 (parameter -> ID .)
+    ,               reduce using rule 7 (parameter -> ID .)
+
+
+state 46
+
+    (3) function -> FN ID ( parameter . ) { body }
+    (6) parameter -> parameter . , ID
+
+    )               shift and go to state 52
+    ,               shift and go to state 53
+
+
+state 47
+
+    (4) function -> COMMAND ID ( parameter . ) { body }
+    (6) parameter -> parameter . , ID
+
+    )               shift and go to state 54
+    ,               shift and go to state 53
+
+
+state 48
+
+    (5) function -> HANDLER ID ( parameter . ) { body }
+    (6) parameter -> parameter . , ID
+
+    )               shift and go to state 55
+    ,               shift and go to state 53
+
+
+state 49
+
+    (14) exp -> IF exp { body } . ELSE { body }
+
+    ELSE            shift and go to state 56
+
+
+state 50
+
+    (15) exp -> TRY { body } CATCH . { body }
+
+    {               shift and go to state 57
+
+
+state 51
+
+    (16) variable -> ID = exp . ;
+
+    ;               shift and go to state 58
+
+
+state 52
+
+    (3) function -> FN ID ( parameter ) . { body }
+
+    {               shift and go to state 59
+
+
+state 53
+
+    (6) parameter -> parameter , . ID
+
+    ID              shift and go to state 60
+
+
+state 54
+
+    (4) function -> COMMAND ID ( parameter ) . { body }
+
+    {               shift and go to state 61
+
+
+state 55
+
+    (5) function -> HANDLER ID ( parameter ) . { body }
+
+    {               shift and go to state 62
+
+
+state 56
+
+    (14) exp -> IF exp { body } ELSE . { body }
+
+    {               shift and go to state 63
+
+
+state 57
+
+    (15) exp -> TRY { body } CATCH { . body }
+    (8) body -> . body exp
+    (9) body -> . body variable
+    (10) body -> . exp
+    (11) body -> . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    body                           shift and go to state 64
+    exp                            shift and go to state 34
+    variable                       shift and go to state 35
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 58
+
+    (16) variable -> ID = exp ; .
+
+    }               reduce using rule 16 (variable -> ID = exp ; .)
+    IF              reduce using rule 16 (variable -> ID = exp ; .)
+    TRY             reduce using rule 16 (variable -> ID = exp ; .)
+    ID              reduce using rule 16 (variable -> ID = exp ; .)
+    SIGN            reduce using rule 16 (variable -> ID = exp ; .)
+    UNITARY_OPERATOR reduce using rule 16 (variable -> ID = exp ; .)
+    FLOAT           reduce using rule 16 (variable -> ID = exp ; .)
+    INTEGER         reduce using rule 16 (variable -> ID = exp ; .)
+    BOOLEAN         reduce using rule 16 (variable -> ID = exp ; .)
+    STRING          reduce using rule 16 (variable -> ID = exp ; .)
+    BINARY_OPERATOR reduce using rule 16 (variable -> ID = exp ; .)
+
+
+state 59
+
+    (3) function -> FN ID ( parameter ) { . body }
+    (8) body -> . body exp
+    (9) body -> . body variable
+    (10) body -> . exp
+    (11) body -> . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    body                           shift and go to state 65
+    exp                            shift and go to state 34
+    variable                       shift and go to state 35
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 60
+
+    (6) parameter -> parameter , ID .
+
+    )               reduce using rule 6 (parameter -> parameter , ID .)
+    ,               reduce using rule 6 (parameter -> parameter , ID .)
+
+
+state 61
+
+    (4) function -> COMMAND ID ( parameter ) { . body }
+    (8) body -> . body exp
+    (9) body -> . body variable
+    (10) body -> . exp
+    (11) body -> . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    body                           shift and go to state 66
+    exp                            shift and go to state 34
+    variable                       shift and go to state 35
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 62
+
+    (5) function -> HANDLER ID ( parameter ) { . body }
+    (8) body -> . body exp
+    (9) body -> . body variable
+    (10) body -> . exp
+    (11) body -> . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    body                           shift and go to state 67
+    exp                            shift and go to state 34
+    variable                       shift and go to state 35
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 63
+
+    (14) exp -> IF exp { body } ELSE { . body }
+    (8) body -> . body exp
+    (9) body -> . body variable
+    (10) body -> . exp
+    (11) body -> . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+    }               reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 34
+    body                           shift and go to state 68
+    variable                       shift and go to state 35
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 64
+
+    (15) exp -> TRY { body } CATCH { body . }
+    (8) body -> body . exp
+    (9) body -> body . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for } resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    }               shift and go to state 69
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! }               [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 42
+    variable                       shift and go to state 43
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 65
+
+    (3) function -> FN ID ( parameter ) { body . }
+    (8) body -> body . exp
+    (9) body -> body . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for } resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    }               shift and go to state 70
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! }               [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 42
+    variable                       shift and go to state 43
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 66
+
+    (4) function -> COMMAND ID ( parameter ) { body . }
+    (8) body -> body . exp
+    (9) body -> body . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for } resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    }               shift and go to state 71
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! }               [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 42
+    variable                       shift and go to state 43
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 67
+
+    (5) function -> HANDLER ID ( parameter ) { body . }
+    (8) body -> body . exp
+    (9) body -> body . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for } resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    }               shift and go to state 72
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! }               [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 42
+    variable                       shift and go to state 43
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 68
+
+    (14) exp -> IF exp { body } ELSE { body . }
+    (8) body -> body . exp
+    (9) body -> body . variable
+    (12) exp -> . term binop exp
+    (13) exp -> . term
+    (14) exp -> . IF exp { body } ELSE { body }
+    (15) exp -> . TRY { body } CATCH { body }
+    (16) variable -> . ID = exp ;
+    (17) term -> . unop term
+    (18) term -> . number
+    (19) term -> . boolean
+    (20) term -> . string
+    (21) term -> . ID
+    (22) term -> . empty
+    (23) unop -> . SIGN
+    (24) unop -> . UNITARY_OPERATOR
+    (27) number -> . FLOAT
+    (28) number -> . INTEGER
+    (29) boolean -> . BOOLEAN
+    (30) string -> . STRING
+    (31) empty -> .
+
+  ! shift/reduce conflict for SIGN resolved as shift
+  ! shift/reduce conflict for } resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for TRY resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for UNITARY_OPERATOR resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for INTEGER resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    }               shift and go to state 73
+    IF              shift and go to state 5
+    TRY             shift and go to state 6
+    ID              shift and go to state 36
+    SIGN            shift and go to state 16
+    UNITARY_OPERATOR shift and go to state 17
+    FLOAT           shift and go to state 18
+    INTEGER         shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 21
+    BINARY_OPERATOR reduce using rule 31 (empty -> .)
+
+  ! SIGN            [ reduce using rule 31 (empty -> .) ]
+  ! }               [ reduce using rule 31 (empty -> .) ]
+  ! IF              [ reduce using rule 31 (empty -> .) ]
+  ! TRY             [ reduce using rule 31 (empty -> .) ]
+  ! ID              [ reduce using rule 31 (empty -> .) ]
+  ! UNITARY_OPERATOR [ reduce using rule 31 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 31 (empty -> .) ]
+  ! INTEGER         [ reduce using rule 31 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 31 (empty -> .) ]
+  ! STRING          [ reduce using rule 31 (empty -> .) ]
+
+    exp                            shift and go to state 42
+    variable                       shift and go to state 43
+    term                           shift and go to state 4
+    unop                           shift and go to state 11
+    number                         shift and go to state 12
+    boolean                        shift and go to state 13
+    string                         shift and go to state 14
+    empty                          shift and go to state 15
+
+state 69
+
+    (15) exp -> TRY { body } CATCH { body } .
+
+    $end            reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    {               reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    }               reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    IF              reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    TRY             reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    ID              reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    SIGN            reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    UNITARY_OPERATOR reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    FLOAT           reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    INTEGER         reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    BOOLEAN         reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    STRING          reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    BINARY_OPERATOR reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+    ;               reduce using rule 15 (exp -> TRY { body } CATCH { body } .)
+
+
+state 70
+
+    (3) function -> FN ID ( parameter ) { body } .
+
+    $end            reduce using rule 3 (function -> FN ID ( parameter ) { body } .)
+
+
+state 71
+
+    (4) function -> COMMAND ID ( parameter ) { body } .
+
+    $end            reduce using rule 4 (function -> COMMAND ID ( parameter ) { body } .)
+
+
+state 72
+
+    (5) function -> HANDLER ID ( parameter ) { body } .
+
+    $end            reduce using rule 5 (function -> HANDLER ID ( parameter ) { body } .)
+
+
+state 73
+
+    (14) exp -> IF exp { body } ELSE { body } .
+
+    $end            reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    {               reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    }               reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    IF              reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    TRY             reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    ID              reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    SIGN            reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    UNITARY_OPERATOR reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    FLOAT           reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    INTEGER         reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    BOOLEAN         reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    STRING          reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    BINARY_OPERATOR reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
+    ;               reduce using rule 14 (exp -> IF exp { body } ELSE { body } .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for SIGN in state 0 resolved as shift
 WARNING: shift/reduce conflict for SIGN in state 4 resolved as shift
-WARNING: shift/reduce conflict for SIGN in state 6 resolved as shift
-WARNING: shift/reduce conflict for SIGN in state 15 resolved as shift
-WARNING: shift/reduce conflict for SIGN in state 19 resolved as shift
+WARNING: shift/reduce conflict for BINARY_OPERATOR in state 4 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 5 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 11 resolved as shift
+WARNING: shift/reduce conflict for ID in state 11 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 11 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 11 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 11 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 11 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 11 resolved as shift
 WARNING: shift/reduce conflict for SIGN in state 22 resolved as shift
-WARNING: shift/reduce conflict for SIGN in state 29 resolved as shift
-WARNING: shift/reduce conflict for SIGN in state 30 resolved as shift
+WARNING: shift/reduce conflict for IF in state 22 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 22 resolved as shift
+WARNING: shift/reduce conflict for ID in state 22 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 22 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 22 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 22 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 22 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 22 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 26 resolved as shift
+WARNING: shift/reduce conflict for IF in state 26 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 26 resolved as shift
+WARNING: shift/reduce conflict for ID in state 26 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 26 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 26 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 26 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 26 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 26 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 32 resolved as shift
+WARNING: shift/reduce conflict for IF in state 32 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 32 resolved as shift
+WARNING: shift/reduce conflict for ID in state 32 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 32 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 32 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 32 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 32 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 32 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 33 resolved as shift
+WARNING: shift/reduce conflict for } in state 33 resolved as shift
+WARNING: shift/reduce conflict for IF in state 33 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 33 resolved as shift
+WARNING: shift/reduce conflict for ID in state 33 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 33 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 33 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 33 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 33 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 33 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 40 resolved as shift
+WARNING: shift/reduce conflict for } in state 40 resolved as shift
+WARNING: shift/reduce conflict for IF in state 40 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 40 resolved as shift
+WARNING: shift/reduce conflict for ID in state 40 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 40 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 40 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 40 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 40 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 40 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 44 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 57 resolved as shift
+WARNING: shift/reduce conflict for IF in state 57 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 57 resolved as shift
+WARNING: shift/reduce conflict for ID in state 57 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 57 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 57 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 57 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 57 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 57 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 59 resolved as shift
+WARNING: shift/reduce conflict for IF in state 59 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 59 resolved as shift
+WARNING: shift/reduce conflict for ID in state 59 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 59 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 59 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 59 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 59 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 59 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 61 resolved as shift
+WARNING: shift/reduce conflict for IF in state 61 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 61 resolved as shift
+WARNING: shift/reduce conflict for ID in state 61 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 61 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 61 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 61 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 61 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 61 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 62 resolved as shift
+WARNING: shift/reduce conflict for IF in state 62 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 62 resolved as shift
+WARNING: shift/reduce conflict for ID in state 62 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 62 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 62 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 62 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 62 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 62 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 63 resolved as shift
+WARNING: shift/reduce conflict for IF in state 63 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 63 resolved as shift
+WARNING: shift/reduce conflict for ID in state 63 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 63 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 63 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 63 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 63 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 63 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 64 resolved as shift
+WARNING: shift/reduce conflict for } in state 64 resolved as shift
+WARNING: shift/reduce conflict for IF in state 64 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 64 resolved as shift
+WARNING: shift/reduce conflict for ID in state 64 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 64 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 64 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 64 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 64 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 64 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 65 resolved as shift
+WARNING: shift/reduce conflict for } in state 65 resolved as shift
+WARNING: shift/reduce conflict for IF in state 65 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 65 resolved as shift
+WARNING: shift/reduce conflict for ID in state 65 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 65 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 65 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 65 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 65 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 65 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 66 resolved as shift
+WARNING: shift/reduce conflict for } in state 66 resolved as shift
+WARNING: shift/reduce conflict for IF in state 66 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 66 resolved as shift
+WARNING: shift/reduce conflict for ID in state 66 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 66 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 66 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 66 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 66 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 66 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 67 resolved as shift
+WARNING: shift/reduce conflict for } in state 67 resolved as shift
+WARNING: shift/reduce conflict for IF in state 67 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 67 resolved as shift
+WARNING: shift/reduce conflict for ID in state 67 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 67 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 67 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 67 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 67 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 67 resolved as shift
+WARNING: shift/reduce conflict for SIGN in state 68 resolved as shift
+WARNING: shift/reduce conflict for } in state 68 resolved as shift
+WARNING: shift/reduce conflict for IF in state 68 resolved as shift
+WARNING: shift/reduce conflict for TRY in state 68 resolved as shift
+WARNING: shift/reduce conflict for ID in state 68 resolved as shift
+WARNING: shift/reduce conflict for UNITARY_OPERATOR in state 68 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 68 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 68 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 68 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 68 resolved as shift

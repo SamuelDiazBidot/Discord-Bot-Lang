@@ -65,22 +65,53 @@ def t_NUMBER(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-literals = [';', '=', '{', '}']
+literals = [',', ';', '=', '{', '}', '(', ')']
 
 lexer = lex.lex()
 
 def p_program(p):
     '''
     program : exp
+            | function
     '''
-    print(p[0])
+    print(p[1])
+
+def p_function(p):
+    '''
+    function : FN ID '(' parameter ')' '{' body '}'
+             | COMMAND ID '(' parameter ')' '{' body '}'
+             | HANDLER ID '(' parameter ')' '{' body '}'
+    '''
+    p[0] = (p[1], p[2], p[4], p[7])
+
+def p_parameter(p):
+    '''
+    parameter : parameter ',' ID
+              | ID
+    '''
+    if len(p) == 4:
+        p[0] = (p[1], p[3])
+    else:
+        p[0] = p[1]
+
+def p_body(p):
+    '''
+    body : body exp
+         | body variable
+         | exp
+         | variable
+    '''
+    if len(p) == 3:
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[1]
 
 def p_exp(p):
     '''
     exp : term binop exp
         | term
-        | IF exp '{' exp '}' ELSE '{' exp '}'
-        | TRY '{' exp '}' CATCH '{' exp '}'
+        | IF exp '{' body '}' ELSE '{' body '}'
+        | TRY '{' body '}' CATCH '{' body '}'
     '''
     if len(p) == 10:
         p[0] = ('if_exp', p[2], p[4], p[8])
@@ -101,8 +132,9 @@ def p_term(p):
     '''
     term : unop term
          | number
-         | BOOLEAN
-         | STRING
+         | boolean
+         | string
+         | ID
          | empty
     '''
     if len(p) == 3:
@@ -122,7 +154,7 @@ def p_binop(p):
     binop : SIGN
           | BINARY_OPERATOR
     '''
-    p[0] = ('binOp', p[1])
+    p[0] = p[1]
 
 def p_number(p):
     '''
@@ -130,6 +162,18 @@ def p_number(p):
            | INTEGER
     '''
     p[0] = ('number', p[1])
+
+def p_boolean(p):
+    '''
+    boolean : BOOLEAN
+    '''
+    p[0] = ('boolean', p[1])
+
+def p_string(p):
+    '''
+    string : STRING
+    '''
+    p[0] = ('string', p[1])
 
 def p_empty(p):
     '''
@@ -142,7 +186,9 @@ def p_error(p):
 
 parser = yacc.yacc()
 
-s = '''
-'''
-
-parser.parse(s)
+while True:
+    try:
+        s = input('>> ')
+    except EOFError:
+        break
+    parser.parse(s)
