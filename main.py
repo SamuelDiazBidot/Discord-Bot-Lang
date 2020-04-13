@@ -72,31 +72,44 @@ literals = [',', ';', ':' ,'=', '{', '}', '(', ')', '[', ']']
 
 lexer = lex.lex()
 
-def p_program(p):
+def p_run(p):
     '''
-    program : exp
-            | function
+    run : program
     '''
     print(p[1])
 
+def p_program(p):
+    '''
+    program : program function
+            | program function_call
+            | program variable
+            | function
+            | function_call
+            | variable
+    '''
+    if len(p) == 3:
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[1]
+
 def p_function(p):
     '''
-    function : FN ID '(' parameter ')' '{' body '}'
-             | COMMAND ID '(' parameter ')' '{' body '}'
-             | HANDLER ID '(' parameter ')' '{' body '}'
+    function : FN id '(' parameter ')' '{' body '}'
+             | COMMAND id '(' parameter ')' '{' body '}'
+             | HANDLER id '(' parameter ')' '{' body '}'
     '''
     p[0] = (p[1], p[2], p[4], p[7])
 
 def p_function_call(p):
     '''
-    function_call : ID '(' term_list ')' 
+    function_call : id '(' term_list ')' 
     '''
     p[0] = ('fuction_call', p[1], p[3])
 
 def p_parameter(p):
     '''
-    parameter : ID ',' parameter
-              | ID
+    parameter : id ',' parameter
+              | id
               | empty
     '''
     if len(p) == 4:
@@ -137,7 +150,7 @@ def p_exp(p):
 
 def p_variable(p):
     '''
-    variable : ID '=' exp 
+    variable : id '=' exp 
     '''
     p[0] = ('variable', p[1], p[3])
 
@@ -168,7 +181,7 @@ def p_term(p):
          | boolean
          | string
          | function_call
-         | ID
+         | id
          | list
          | dict
          | empty
@@ -224,6 +237,12 @@ def p_string(p):
     '''
     p[0] = ('string', p[1])
 
+def p_id(p):
+    '''
+    id : ID
+    '''
+    p[0] = ('id', p[1])
+
 def p_empty(p):
     '''
     empty :
@@ -236,6 +255,8 @@ def p_error(p):
 parser = yacc.yacc()
 
 s = '''
+x = 1
+token('xxxxx')
 handler sayHello(message) {
     content = getContent(message)
     if matches('*hello', content) {
