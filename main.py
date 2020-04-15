@@ -77,6 +77,7 @@ def p_run(p):
     run : program
     '''
     print(p[1])
+    run(p[1])
 
 def p_program(p):
     '''
@@ -88,7 +89,7 @@ def p_program(p):
             | variable
     '''
     if len(p) == 3:
-        p[0] = (p[1], p[2])
+        p[0] = ('program', p[1], p[2])
     else:
         p[0] = p[1]
 
@@ -265,4 +266,28 @@ handler sayHello(message) {
 }
 '''
 
-parser.parse(s)
+t = '''
+x = 1
+y = 'hello'
+fn x() {
+    x
+}
+z = 3
+'''
+
+def run(p):
+    if p[0] == 'program':
+        run(p[1])
+        run(p[2])
+    elif p[0] == 'variable':
+        print(run(p[1]), '=' , run(p[2]))
+    elif p[0] == 'fn':
+        print('def', run(p[1]), '(', '):')
+    elif p[0] == 'id':
+        return str(p[1])
+    elif p[0] == 'number':
+        return str(p[1])
+    elif p[0] == 'string':
+        return str(p[1])
+
+parser.parse(t)
