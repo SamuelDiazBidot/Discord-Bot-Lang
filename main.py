@@ -105,7 +105,7 @@ def p_function_call(p):
     '''
     function_call : id '(' term_list ')' 
     '''
-    p[0] = ('fuction_call', p[1], p[3])
+    p[0] = ('function_call', p[1], p[3])
 
 def p_parameter(p):
     '''
@@ -114,9 +114,9 @@ def p_parameter(p):
               | empty
     '''
     if len(p) == 4:
-        p[0] = (p[1], p[3])
+        p[0] = ('parameter', p[1], p[3])
     else:
-        p[0] = p[1]
+        p[0] = ('parameter', p[1])
 
 def p_body(p):
     '''
@@ -126,7 +126,7 @@ def p_body(p):
          | variable
     '''
     if len(p) == 3:
-        p[0] = (p[1], p[2])
+        p[0] = ('body', p[1], p[2])
     else:
         p[0] = p[1]
 
@@ -171,7 +171,7 @@ def p_term_list(p):
               | term
     '''
     if len(p) == 4:
-        p[0] = (p[1], p[3])
+        p[0] = ('term_list', p[1], p[3])
     else:
         p[0] = p[1]
 
@@ -269,8 +269,12 @@ handler sayHello(message) {
 t = '''
 x = 1
 y = 'hello'
-fn x() {
-    x
+
+fn sum(x, y) {
+    s = 0
+    b = true
+    tt = 1
+    sum(1, true)
 }
 z = 3
 '''
@@ -280,14 +284,37 @@ def run(p):
         run(p[1])
         run(p[2])
     elif p[0] == 'variable':
-        print(run(p[1]), '=' , run(p[2]))
+        a = run(p[1]) + ' = ' + run(p[2])
+        print(a)
+        return a
     elif p[0] == 'fn':
-        print('def', run(p[1]), '(', '):')
+        print('def ' + run(p[1]) + ' (' + run(p[2]) + '):\n\t' + run(p[3]))
+    elif p[0] == 'parameter':
+        if p[1] == None:
+            return ''
+        elif len(p) > 2:
+            return run(p[1]) + ',' + run(p[2])
+        else:
+            return run(p[1])
+    elif p[0] == 'body':
+        return run(p[1]) + '\n\t' + run(p[2])
+    elif p[0] == 'function_call':
+        if p[2] == None:
+            return run(p[1]) + '()'
+        else:
+            return run(p[1]) + '(' + run(p[2]) + ')'
+    elif p[0] == 'term_list':
+        if len(p) > 2:
+            return run(p[1]) + ',' + run(p[2])
+        else:
+            return run(p[1])
     elif p[0] == 'id':
         return str(p[1])
     elif p[0] == 'number':
         return str(p[1])
     elif p[0] == 'string':
+        return str(p[1])
+    elif p[0] == 'boolean':
         return str(p[1])
 
 parser.parse(t)
