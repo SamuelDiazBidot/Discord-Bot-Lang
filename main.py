@@ -99,7 +99,7 @@ def p_function(p):
              | COMMAND id '(' parameter ')' '{' body '}'
              | HANDLER id '(' parameter ')' '{' body '}'
     '''
-    p[0] = (p[1], p[2], p[4], p[7])
+    p[0] = (p[1], p[2], p[4], p[7] )
 
 def p_function_call(p):
     '''
@@ -267,31 +267,41 @@ handler sayHello(message) {
 '''
 
 t = '''
-x = x - 1
-y = 'hello' + 'world'
-
 fn sum(x, y) {
-    s = {1 : 2, 3:5}
-    b = [1,'hello', false]
-    sum(1, true)
     if true {
-       if x {
-           z
-       }
+        if true {
+            x
+        }
     } else {
-        y 
-    }
-    try {
-        x
-    } catch {
         y
     }
+    run()
+    x = y
+
+    try {
+        try {
+            if true {
+                x
+            }
+        } catch {
+            y
+        }
+    } catch {
+        'bye'
+    }
 }
-z = 3
-ret()
 '''
 
+tab_count = 0
+
+def tabs():
+    result = ''
+    for _ in range(0, tab_count):
+        result = result + '\t'
+    return result
+
 def run(p):
+    global tab_count
     if p[0] == 'program':
         return run(p[1]) + '\n' + run(p[2])
     elif p[0] == 'variable':
@@ -300,13 +310,27 @@ def run(p):
         return run(p[2]) + p[1] + run(p[3])
     elif p[0] == 'if_exp':
         if len(p) > 3:
-            return 'if ' + run(p[1]) + ':\n' + run(p[2]) + '\nelse:\n' + run(p[3])
+            original_tab = tabs()
+            tab_count += 1
+            a = 'if ' + run(p[1]) + ':\n' + tabs() + run(p[2]) + '\n' + original_tab + 'else:\n' + tabs() + run(p[3])
+            tab_count -= 1
+            return a
         else:
-            return 'if ' + run(p[1]) + ':\n' + run(p[2])
+            tab_count += 1
+            a = 'if ' + run(p[1]) + ':\n' + tabs() + run(p[2])
+            tab_count -= 1
+            return a
     elif p[0] == 'try_exp':
-        return 'try:\n' + run(p[1]) + "\nexcept:\n" + run(p[2])
+        original_tab = tabs()
+        tab_count += 1
+        a = 'try:\n' + tabs() + run(p[1]) +'\n' + original_tab + "except:\n" + tabs() + run(p[2])
+        tab_count -= 1
+        return a
     elif p[0] == 'fn':
-        return 'def ' + run(p[1]) + ' (' + run(p[2]) + '):\n' + run(p[3])
+        tab_count += 1
+        a = 'def ' + run(p[1]) + ' (' + run(p[2]) + '):\n' + tabs() + run(p[3])
+        tab_count -= 1
+        return a
     elif p[0] == 'parameter':
         if p[1] == None:
             return ''
@@ -316,9 +340,9 @@ def run(p):
             return run(p[1])
     elif p[0] == 'body':
         if len(p) > 2:
-            return run(p[1]) + '\n' + run(p[2]) 
+            return run(p[1]) + '\n' + tabs() + run(p[2]) 
         else:
-            return run(p[1]) 
+            return run(p[1])
     elif p[0] == 'function_call':
         if p[2] == None:
             return run(p[1]) + '()'
