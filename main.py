@@ -52,7 +52,7 @@ def t_STRING(t):
     return t
 
 def t_BINARY_OPERATOR(t):
-    r'\* | \/ | == | != | <= | >= | < | > | and | or | \+\+'
+    r'\* | \/ | == | != | <= | >= | < | > | and | or'
     return t
 
 def t_ID(t):
@@ -77,7 +77,7 @@ def p_run(p):
     run : program
     '''
     print(p[1])
-    run(p[1])
+    print(run(p[1]))
 
 def p_program(p):
     '''
@@ -128,7 +128,7 @@ def p_body(p):
     if len(p) == 3:
         p[0] = ('body', p[1], p[2])
     else:
-        p[0] = p[1]
+        p[0] = ('body', p[1])
 
 def p_exp(p):
     '''
@@ -161,9 +161,9 @@ def p_term_map(p):
              | term ':' term
     '''
     if len(p) == 6:
-        p[0] = (p[1], p[3], p[5])
+        p[0] = ('term_map', p[1], p[3], p[5])
     else:
-        p[0] = (p[1], p[3])
+        p[0] = ('term_map', p[1], p[3])
 
 def p_term_list(p):
     '''
@@ -188,7 +188,7 @@ def p_term(p):
          | empty
     '''
     if len(p) == 3:
-        p[0] = (p[1], p[2])
+        p[0] = ('unop_term', p[1], p[2])
     else:
         p[0] = p[1]
 
@@ -197,7 +197,7 @@ def p_unop(p):
     unop : SIGN
          | UNITARY_OPERATOR
     '''
-    p[0] = ('unOp', p[1])
+    p[0] = p[1]
 
 def p_binop(p):
     '''
@@ -267,28 +267,46 @@ handler sayHello(message) {
 '''
 
 t = '''
-x = 1
-y = 'hello'
+x = x - 1
+y = 'hello' + 'world'
 
 fn sum(x, y) {
-    s = 0
-    b = true
-    tt = 1
+    s = {1 : 2, 3:5}
+    b = [1,'hello', false]
     sum(1, true)
+    if true {
+       if x {
+           z
+       }
+    } else {
+        y 
+    }
+    try {
+        x
+    } catch {
+        y
+    }
 }
 z = 3
+ret()
 '''
 
 def run(p):
     if p[0] == 'program':
-        run(p[1])
-        run(p[2])
+        return run(p[1]) + '\n' + run(p[2])
     elif p[0] == 'variable':
-        a = run(p[1]) + ' = ' + run(p[2])
-        print(a)
-        return a
+        return run(p[1]) + ' = ' + run(p[2])
+    elif p[0] == 'binop_exp':
+        return run(p[2]) + p[1] + run(p[3])
+    elif p[0] == 'if_exp':
+        if len(p) > 3:
+            return 'if ' + run(p[1]) + ':\n' + run(p[2]) + '\nelse:\n' + run(p[3])
+        else:
+            return 'if ' + run(p[1]) + ':\n' + run(p[2])
+    elif p[0] == 'try_exp':
+        return 'try:\n' + run(p[1]) + "\nexcept:\n" + run(p[2])
     elif p[0] == 'fn':
-        print('def ' + run(p[1]) + ' (' + run(p[2]) + '):\n\t' + run(p[3]))
+        return 'def ' + run(p[1]) + ' (' + run(p[2]) + '):\n' + run(p[3])
     elif p[0] == 'parameter':
         if p[1] == None:
             return ''
@@ -297,7 +315,10 @@ def run(p):
         else:
             return run(p[1])
     elif p[0] == 'body':
-        return run(p[1]) + '\n\t' + run(p[2])
+        if len(p) > 2:
+            return run(p[1]) + '\n' + run(p[2]) 
+        else:
+            return run(p[1]) 
     elif p[0] == 'function_call':
         if p[2] == None:
             return run(p[1]) + '()'
@@ -308,6 +329,23 @@ def run(p):
             return run(p[1]) + ',' + run(p[2])
         else:
             return run(p[1])
+    elif p[0] == 'term_map':
+        if len(p) > 3:
+            return run(p[1]) + ':' + run(p[2]) + ',' + run(p[3])
+        else:
+            return run(p[1]) + ':' + run(p[2])
+    elif p[0] == 'dict':
+        if p[1] == None:
+            return '{}'
+        else:
+            return '{' + run(p[1]) + '}'
+    elif p[0] == 'list':
+        if p[1] == None:
+            return '[]'
+        else:
+            return '[' + run(p[1]) + ']'
+    elif p[0] == 'unop_term':
+        return p[1] + run(p[2])
     elif p[0] == 'id':
         return str(p[1])
     elif p[0] == 'number':
