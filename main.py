@@ -9,9 +9,9 @@ reserved = {
     'else' : 'ELSE',
     'fn' : 'FN',
     'command' : 'COMMAND',
-    'handler' : 'HANDLER',
     'try' : 'TRY',
     'catch' : 'CATCH',
+    'token' : 'TOKEN'
 }
 
 tokens = [
@@ -87,22 +87,29 @@ def p_program(p):
     program : program function
             | program function_call
             | program variable
+            | program token
             | function
             | function_call
             | variable
+            | token
     '''
     if len(p) == 3:
         p[0] = ('program', p[1], p[2])
     else:
-        p[0] = ('program', p[1])
+        p[0] = p[1]
 
 def p_function(p):
     '''
     function : FN id '(' parameter ')' '{' body '}'
              | COMMAND id '(' parameter ')' '{' body '}'
-             | HANDLER id '(' parameter ')' '{' body '}'
     '''
     p[0] = (p[1], p[2], p[4], p[7] )
+
+def p_token(p):
+    '''
+    token : TOKEN '(' string ')'
+    '''
+    p[0] = ('token', p[3])
 
 def p_function_call(p):
     '''
@@ -259,9 +266,7 @@ def p_error(p):
 parser = yacc.yacc()
 
 t = '''
-command send(arg) {
-    send(arg)
-}
+token('xxxxxx')
 '''
 
 parser.parse(t)

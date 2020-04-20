@@ -1,4 +1,6 @@
 tab_count = 0
+function_type = ''
+token = ''
 
 def tabs():
     result = ''
@@ -7,16 +9,11 @@ def tabs():
     return result
 
 def run(p):
-    global tab_count
+    global tab_count, function_type, token
 
-    default_code_begining = 'import discord\n' + 'from discord.ext import commands\n' + 'client = discord.Client()\n' + 'bot = commands.Bot(command_prefix=\'$\')\n'
-    default_code_end = '\nclient.run(\'your token here\')'
 
     if p[0] == 'program':
-        if len(p) > 2:
-            return  default_code_begining + run(p[1]) + '\n' + run(p[2]) + default_code_end
-        else:
-            return default_code_begining + run(p[1]) + default_code_end
+        return run(p[1]) + '\n' + run(p[2])
     elif p[0] == 'variable':
         return run(p[1]) + ' = ' + run(p[2])
     elif p[0] == 'binop_exp':
@@ -40,13 +37,15 @@ def run(p):
         tab_count -= 1
         return a
     elif p[0] == 'fn':
+        function_type = 'fn'
         tab_count += 1
         a = 'def ' + run(p[1]) + ' (' + run(p[2]) + '):\n' + tabs() + run(p[3])
         tab_count -= 1
         return a
     elif p[0] == 'command':
+        function_type = 'command'
         tab_count += 1
-        a = '@bot.command()\nasync def ' +  run(p[1]) + '(ctx,' + run(p[2]) + '):\n' + tabs() + run(p[3]) + '\nbot.add_command(' + run(p[1]) + ')\n'
+        a = '@bot.command()\nasync def ' +  run(p[1]) + '(ctx,' + run(p[2]) + '):\n' + tabs() + run(p[3]) 
         tab_count -= 1
         return a
     elif p[0] == 'parameter':
@@ -61,11 +60,17 @@ def run(p):
             return run(p[1]) + '\n' + tabs() + run(p[2]) 
         else:
             return run(p[1])
+    elif p[0] == 'token':
+        token = run(p[1])
+        return ''
     elif p[0] == 'function_call':
+        function_name = run(p[1])
+        if function_name == 'send':
+            function_name = send(function_type)
         if p[2] == None:
-            return run(p[1]) + '()'
+            return function_name + '()'
         else:
-            return run(p[1]) + '(' + run(p[2]) + ')'
+            return function_name + '(' + run(p[2]) + ')'
     elif p[0] == 'term_list':
         if len(p) > 2:
             return run(p[1]) + ',' + run(p[2])
@@ -97,8 +102,22 @@ def run(p):
     elif p[0] == 'boolean':
         return str(p[1])
 
+def send(function_type):
+    if function_type == 'command':
+        return 'await ctx.send'
+    elif function_type == 'handler':
+        return 'await message.channel.send'
+    else:
+        #TODO: Throw error
+        return 'send'
+
+def defaultCodeEnd():
+    global token
+    return '\nbot.run(' + token + ')'
+
 def makeFile(syntaxTree):
-    program = run(syntaxTree)
+    default_code_begining = 'import discord\n' + 'from discord.ext import commands\n' + 'bot = commands.Bot(command_prefix=\'-\')\n'
+    program = default_code_begining + run(syntaxTree) + defaultCodeEnd()
     outputCode = open('bot.py', 'w')
     outputCode.write(program)
     outputCode.close()
