@@ -4,4 +4,4 @@
 ### Requirements
 ```pip install -r requirements.txt```
 ### To Run:
-```python3 main.py```
+```python3 main.py <file_path>```
