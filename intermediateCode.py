@@ -9,13 +9,13 @@ def tabs():
     return result
 
 def run(p):
-    global tab_count, function_type, token
-
+    global tab_count, function_type, token 
 
     if p[0] == 'program':
         return run(p[1]) + '\n' + run(p[2])
     elif p[0] == 'variable':
-        return run(p[1]) + ' = ' + run(p[2])
+        var = run(p[1])
+        return var + ' = ' + run(p[2])
     elif p[0] == 'binop_exp':
         return run(p[2]) + p[1] + run(p[3])
     elif p[0] == 'if_exp':
@@ -60,6 +60,10 @@ def run(p):
             return run(p[1]) + '\n' + tabs() + run(p[2]) 
         else:
             return run(p[1])
+    elif p[0] == 'return':
+        return 'return ' + run(p[1])
+    elif p[0] == 'global':
+        return 'global ' + run(p[1])
     elif p[0] == 'token':
         token = run(p[1])
         return ''
@@ -105,8 +109,6 @@ def run(p):
 def send(function_type):
     if function_type == 'command':
         return 'await ctx.send'
-    elif function_type == 'handler':
-        return 'await message.channel.send'
     else:
         #TODO: Throw error
         return 'send'

@@ -10,6 +10,8 @@ reserved = {
     'fn' : 'FN',
     'command' : 'COMMAND',
     'try' : 'TRY',
+    'ret' : 'RET',
+    'global' : 'GLOBAL',
     'catch' : 'CATCH',
     'token' : 'TOKEN'
 }
@@ -132,8 +134,12 @@ def p_body(p):
     '''
     body : body exp
          | body variable
+         | body return
+         | body global
          | exp
          | variable
+         | return
+         | global
     '''
     if len(p) == 3:
         p[0] = ('body', p[1], p[2])
@@ -164,6 +170,18 @@ def p_variable(p):
     variable : id '=' exp 
     '''
     p[0] = ('variable', p[1], p[3])
+
+def p_return(p):
+    '''
+    return : RET id
+    '''
+    p[0] = ('return', p[2])
+
+def p_global(p):
+    '''
+    global : GLOBAL term_list
+    '''
+    p[0] = ('global', p[2])
 
 def p_term_map(p):
     '''
@@ -266,7 +284,13 @@ def p_error(p):
 parser = yacc.yacc()
 
 t = '''
+z = 0
 token('xxxxxx')
+fn sum(x,y) {
+    global z
+    result = x + y
+    ret result
+}
 '''
 
 parser.parse(t)
