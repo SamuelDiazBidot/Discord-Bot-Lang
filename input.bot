@@ -1,0 +1,18 @@
+token('xxxxxxxxxxxx')
+
+counter = 1
+
+command inc() {
+    global counter
+    counter = counter + 1
+}
+
+command dec() {
+    global counter
+    counter = counter - 1
+}
+
+command show() {
+    global counter
+    send(counter)
+}
