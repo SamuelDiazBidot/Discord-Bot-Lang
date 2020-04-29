@@ -1,6 +1,9 @@
+import sys
+
 tab_count = 0
 function_type = ''
 token = ''
+token_flag = False
 
 def tabs():
     result = ''
@@ -9,7 +12,7 @@ def tabs():
     return result
 
 def run(p):
-    global tab_count, function_type, token 
+    global tab_count, function_type, token, token_flag
 
     if p[0] == 'program':
         return run(p[1]) + '\n' + run(p[2])
@@ -65,6 +68,7 @@ def run(p):
     elif p[0] == 'global':
         return 'global ' + run(p[1])
     elif p[0] == 'token':
+        token_flag = True
         token = run(p[1])
         return ''
     elif p[0] == 'function_call':
@@ -110,8 +114,8 @@ def send(function_type):
     if function_type == 'command':
         return 'await ctx.send'
     else:
-        #TODO: Throw error
-        return 'send'
+        print('Error: cannot call send function on a function')
+        sys.exit()
 
 def defaultCodeEnd():
     global token
@@ -120,6 +124,14 @@ def defaultCodeEnd():
 def makeFile(syntaxTree):
     default_code_begining = 'import discord\n' + 'from discord.ext import commands\n' + 'bot = commands.Bot(command_prefix=\'-\')\n'
     program = default_code_begining + run(syntaxTree) + defaultCodeEnd()
+    checkErrors()
     outputCode = open('bot.py', 'w')
     outputCode.write(program)
     outputCode.close()
+
+def checkErrors():
+    global token_flag
+
+    if not token_flag:
+        print('Missing a token function')
+        sys.exit()
