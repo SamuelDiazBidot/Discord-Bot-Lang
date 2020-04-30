@@ -7,12 +7,24 @@ counter = 1
 async def inc(ctx,):
 	global counter
 	counter = counter+1
+@inc.error
+async def inc_error(ctx,error):
+	if isinstance(error, commands.BadArgument):
+		await ctx.send('An error occured')
 @bot.command()
 async def dec(ctx,):
 	global counter
 	counter = counter-1
+@dec.error
+async def dec_error(ctx,error):
+	if isinstance(error, commands.BadArgument):
+		await ctx.send('An error occured')
 @bot.command()
 async def show(ctx,):
 	global counter
 	await ctx.send(counter)
+@show.error
+async def show_error(ctx,error):
+	if isinstance(error, commands.BadArgument):
+		await ctx.send('An error occured')
 bot.run('xxxxxxxxxxxx')

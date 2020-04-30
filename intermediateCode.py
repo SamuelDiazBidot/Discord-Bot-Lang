@@ -47,10 +47,12 @@ def run(p):
         return a
     elif p[0] == 'command':
         function_type = 'command'
+        function_id = run(p[1])
         tab_count += 1
-        a = '@bot.command()\nasync def ' +  run(p[1]) + '(ctx,' + run(p[2]) + '):\n' + tabs() + run(p[3]) 
+        command = '@bot.command()\nasync def ' + function_id  + '(ctx,' + run(p[2]) + '):\n' + tabs() + run(p[3]) 
+        error = '\n@' + function_id + '.error\nasync def ' + function_id + '_error(ctx,error):\n' + tabs() + 'if isinstance(error, commands.BadArgument):\n'+ tabs() +'\tawait ctx.send(\'Invalid Arguments\')'
         tab_count -= 1
-        return a
+        return command + error
     elif p[0] == 'parameter':
         if p[1] == None:
             return ''
