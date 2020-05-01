@@ -4,6 +4,7 @@ tab_count = 0
 function_type = ''
 token = ''
 token_flag = False
+function_ids = set()
 
 def tabs():
     result = ''
@@ -12,7 +13,7 @@ def tabs():
     return result
 
 def run(p):
-    global tab_count, function_type, token, token_flag
+    global tab_count, function_type, token, token_flag, function_ids
 
     if p[0] == 'program':
         return run(p[1]) + '\n' + run(p[2])
@@ -41,8 +42,10 @@ def run(p):
         return a
     elif p[0] == 'fn':
         function_type = 'fn'
+        function_name = run(p[1])
+        function_ids.add(function_name)
         tab_count += 1
-        a = 'def ' + run(p[1]) + ' (' + run(p[2]) + '):\n' + tabs() + run(p[3])
+        a = 'def ' + function_name + ' (' + run(p[2]) + '):\n' + tabs() + run(p[3])
         tab_count -= 1
         return a
     elif p[0] == 'command':
@@ -62,6 +65,7 @@ def run(p):
             return run(p[1])
     elif p[0] == 'body':
         if len(p) > 2:
+            print(run(p[2]))
             return run(p[1]) + '\n' + tabs() + run(p[2]) 
         else:
             return run(p[1])
@@ -77,6 +81,15 @@ def run(p):
         function_name = run(p[1])
         if function_name == 'send':
             function_name = send(function_type)
+        elif function_name not in function_ids:
+            print('Error: Function \'' + function_name + '\' is undefined')
+            sys.exit()
+        if p[2] == None:
+            return function_name + '()'
+        else:
+            return function_name + '(' + run(p[2]) + ')'
+    elif p[0] == 'python_function_call':
+        function_name = run(p[1])
         if p[2] == None:
             return function_name + '()'
         else:

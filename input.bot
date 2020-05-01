@@ -2,7 +2,10 @@ token('xxxxxxxxxxxx')
 
 counter = 1
 
+.len()
+
 command inc() {
+    .len()
     global counter
     counter = counter + 1
 }

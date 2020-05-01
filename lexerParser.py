@@ -71,7 +71,7 @@ def t_NUMBER(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-literals = [',', ';', ':' ,'=', '{', '}', '(', ')', '[', ']']
+literals = ['.',',', ';', ':' ,'=', '{', '}', '(', ')', '[', ']']
 
 lex.lex()
 
@@ -87,10 +87,12 @@ def p_program(p):
     '''
     program : program function
             | program function_call
+            | program python_function_call
             | program variable
             | program token
             | function
             | function_call
+            | python_function_call
             | variable
             | token
     '''
@@ -118,6 +120,12 @@ def p_function_call(p):
     '''
     p[0] = ('function_call', p[1], p[3])
 
+def p_python_function_call(p):
+    '''
+    python_function_call : '.' id '(' term_list ')'
+    '''
+    p[0] = ('python_function_call', p[2], p[4])
+
 def p_parameter(p):
     '''
     parameter : id ',' parameter
@@ -135,6 +143,10 @@ def p_body(p):
          | body variable
          | body return
          | body global
+         | body function_call
+         | body python_function_call
+         | function_call
+         | python_function_call
          | exp
          | variable
          | return
