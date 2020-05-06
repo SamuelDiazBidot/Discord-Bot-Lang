@@ -3,10 +3,8 @@ from discord.ext import commands
 bot = commands.Bot(command_prefix='-')
 
 counter = 1
-len()
 @bot.command()
 async def inc(ctx,):
-	len()
 	global counter
 	counter = counter+1
 @inc.error
@@ -29,4 +27,12 @@ async def show(ctx,):
 async def show_error(ctx,error):
 	if isinstance(error, commands.BadArgument):
 		await ctx.send('Invalid Arguments')
-bot.run('xxxxxxxxxxxx')
+@bot.command()
+async def sum(ctx,x,y):
+	result = int(x)+int(y)
+	await ctx.send(result)
+@sum.error
+async def sum_error(ctx,error):
+	if isinstance(error, commands.BadArgument):
+		await ctx.send('Invalid Arguments')
+bot.run('NzAxODA3MzU4NjYxMDk5NTgy.XrMWEA.D10sg4j1LjIhLJycz_rzaZVqr-4')

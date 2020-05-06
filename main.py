@@ -1,4 +1,5 @@
 import argparse
+import os
 from lexerParser import make_parser
 
 argParser = argparse.ArgumentParser()
@@ -8,3 +9,6 @@ args = argParser.parse_args()
 inputFile = open(args.file_path, 'r')
 parser = make_parser()
 parser.parse(inputFile.read())
+
+print('Running...')
+os.system('python3 bot.py')

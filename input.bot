@@ -1,11 +1,8 @@
-token('xxxxxxxxxxxx')
+token('NzAxODA3MzU4NjYxMDk5NTgy.XrMWEA.D10sg4j1LjIhLJycz_rzaZVqr-4')
 
 counter = 1
 
-.len()
-
 command inc() {
-    .len()
     global counter
     counter = counter + 1
 }
@@ -18,4 +15,9 @@ command dec() {
 command show() {
     global counter
     send(counter)
+}
+
+command sum(x,y) {
+    result = .int(x) + .int(y)
+    send(result)
 }

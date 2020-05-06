@@ -65,7 +65,6 @@ def run(p):
             return run(p[1])
     elif p[0] == 'body':
         if len(p) > 2:
-            print(run(p[2]))
             return run(p[1]) + '\n' + tabs() + run(p[2]) 
         else:
             return run(p[1])

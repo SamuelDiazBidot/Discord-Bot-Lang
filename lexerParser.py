@@ -79,8 +79,6 @@ def p_run(p):
     '''
     run : program
     '''
-    print(p[1])
-    print(run(p[1]))
     makeFile(p[1])
 
 def p_program(p):
@@ -221,6 +219,7 @@ def p_term(p):
          | boolean
          | string
          | function_call
+         | python_function_call
          | id
          | list
          | dict
