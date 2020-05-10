@@ -12,7 +12,9 @@ reserved = {
     'ret' : 'RET',
     'global' : 'GLOBAL',
     'catch' : 'CATCH',
-    'token' : 'TOKEN'
+    'token' : 'TOKEN',
+    'for' : 'FOR',
+    'in' : 'IN'
 }
 
 tokens = [
@@ -162,11 +164,17 @@ def p_exp(p):
         | IF exp '{' body '}' ELSE '{' body '}'
         | IF exp '{' body '}'
         | TRY '{' body '}' CATCH '{' body '}'
+        | FOR id IN number '.' '.' number '{' body '}'
+        | FOR id IN id '{' body '}'
     '''
-    if len(p) == 10:
+    if len(p) == 11:
+        p[0] = ('for_exp', p[2], p[4], p[7], p[9])
+    elif len(p) == 10:
         p[0] = ('if_exp', p[2], p[4], p[8])
     elif len(p) == 9:
         p[0] = ('try_exp', p[3], p[7])
+    elif len(p) == 8:
+        p[0] = ('for_exp', p[2], p[4], p[6])
     elif len(p) == 6:
         p[0] = ('if_exp', p[2], p[4])
     elif len(p) == 4:

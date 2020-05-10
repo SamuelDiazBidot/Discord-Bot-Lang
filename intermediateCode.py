@@ -34,6 +34,17 @@ def run(p):
             a = 'if ' + run(p[1]) + ':\n' + tabs() + run(p[2])
             tab_count -= 1
             return a
+    elif p[0] == 'for_exp':
+        if len(p) > 4:
+            tab_count += 1
+            a = 'for ' + run(p[1]) + ' in range(' + run(p[2]) + ',' + run(p[3]) + '):\n' + tabs() + run(p[4])
+            tab_count -= 1
+            return a
+        else:
+            tab_count +=1 
+            a = 'for ' + run(p[1]) + ' in ' + run(p[2]) + ' :\n' + tabs() + run(p[3])
+            tab_count -= 1
+            return a
     elif p[0] == 'try_exp':
         original_tab = tabs()
         tab_count += 1
