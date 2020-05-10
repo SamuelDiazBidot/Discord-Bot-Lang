@@ -79,6 +79,8 @@ def run(p):
             return run(p[1]) + '\n' + tabs() + run(p[2]) 
         else:
             return run(p[1])
+    elif p[0] == 'closure':
+        return 'lambda ' + run(p[1]) + ' : ' + run(p[2])
     elif p[0] == 'return':
         return 'return ' + run(p[1])
     elif p[0] == 'global':

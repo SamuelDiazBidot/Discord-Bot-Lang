@@ -73,7 +73,7 @@ def t_NUMBER(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-literals = ['.',',', ';', ':' ,'=', '{', '}', '(', ')', '[', ']']
+literals = ['.',',', ';', ':' ,'=', '{', '}', '(', ')', '[', ']', '|']
 
 lex.lex()
 
@@ -185,8 +185,15 @@ def p_exp(p):
 def p_variable(p):
     '''
     variable : id '=' exp 
+             | id '=' closure
     '''
     p[0] = ('variable', p[1], p[3])
+
+def p_closure(p):
+    '''
+    closure : '|' term_list '|' ':' body
+    '''
+    p[0] = ('closure', p[2], p[5])
 
 def p_return(p):
     '''
