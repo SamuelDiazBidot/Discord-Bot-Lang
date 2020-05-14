@@ -1,9 +1,11 @@
 # Discord-Bot-Lang
 
 ## Description:
-Discord bot lang is a dynamically typed language that facilitates the creation of discord bots. 
+Discord Bot lang is a dynamically typed language that facilitates the creation of discord bots. 
 ### Purpose:
-_TODO_
+The purpose of the Discord Bot lang is to allow a direct connection to the discord API 
+which in turn facilitates the creation and deployment of simple discord bots. 
+The language allows for the implementation of commands for the bot to follow.
 ### Features:
 * Closure support
 * Python3 core library 
