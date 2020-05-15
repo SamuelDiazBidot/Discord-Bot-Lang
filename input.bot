@@ -1,5 +1,6 @@
 token('NzAxODA3MzU4NjYxMDk5NTgy.XrMWEA.D10sg4j1LjIhLJycz_rzaZVqr-4')
 
+~This is a comment
 counter = 1
 
 command inc() {

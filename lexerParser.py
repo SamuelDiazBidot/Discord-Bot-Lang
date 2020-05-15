@@ -33,6 +33,10 @@ t_UNITARY_OPERATOR = r'\~'
 
 t_ignore = ' \t'
 
+def t_COMMENT(t):
+     r'~.*'
+     pass
+
 def t_FLOAT(t):
     r'\d+\.\d+'
     t.value = float(t.value)
