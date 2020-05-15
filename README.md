@@ -12,6 +12,40 @@ The language allows for the implementation of commands for the bot to follow.
 * Easy discord bot prototyping
 * Auto-generated command error handling 
 ### Examples:
+Language showcase:
+```python
+~Each program must call the token function
+token('NzAxODA3MzU4NjYxMDk5NTgy.XrMWEA.D10sg4j1LjIhLJycz_rzaZVqr-4')
+
+~Variables dont need a type
+x = 12
+y = false
+
+~Simple data structures like lists & hashmaps are supported 
+myList = []
+myMap = {}
+
+~Closures are also supported
+myClosure = |x| : x*x
+
+~Functions are defined using the fn keyword
+fn myfun(x,y) {
+    if x > y {
+        ~To call python functions use a dot before the function name
+        .print(x)
+        return x
+    } else {
+        return y
+    }
+    
+}
+
+~Commands are defined using the command keyword
+command echo(arg) {
+    ~To send a message to discord use the send function
+    send(arg)
+}
+```
 simple counter bot:
 ```python
 token('NzAxODA3MzU4NjYxMDk5NTgy.XrMWEA.D10sg4j1LjIhLJycz_rzaZVqr-4')
