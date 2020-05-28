@@ -1,7 +1,7 @@
 # Discord-Bot-Lang
 ## Video Presentation:
 https://youtu.be/xpfGZor2Kuw
-##Promo Video:
+## Promo Video:
 https://youtu.be/ffL-7lYPBCk
 ## Description:
 Discord Bot lang is a dynamically typed language that facilitates the creation of discord bots. 
